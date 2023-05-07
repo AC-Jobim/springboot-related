@@ -5,6 +5,7 @@ import com.zb.mybatis.generator.mapper.EmpMapper;
 import com.zb.mybatis.generator.pojo.Emp;
 import com.zb.mybatis.generator.pojo.EmpExample;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,8 +34,6 @@ public class MBGTest {
 
     @Test
     public void test(){
-
-
 
         // 查询所有数据
         System.out.println("\n--------->查询所有数据");
@@ -52,7 +52,7 @@ public class MBGTest {
 
 
 //        mapper.updateByPrimaryKey(new Emp(1, "admin", 22, null));
-        mapper.updateByPrimaryKeySelective(new Emp(2, "admin", 22, null));
+//        mapper.updateByPrimaryKeySelective(new Emp(2, "admin", 22, null));
 
 //        try {
 //            //根据条件查询 QBC: Query by Criteria
@@ -80,6 +80,43 @@ public class MBGTest {
 //            e.printStackTrace();
 //        }
     }
+
+    @Autowired
+    private SqlSessionFactory sqlSessionFactory;
+
+    @Test
+    public void testBatch() {
+
+        Emp empTemp = new Emp();
+        empTemp.setAge(1);
+        empTemp.setEmpName("名字" + 1);
+        mapper.insert(empTemp);
+
+        List<Emp> empList = new ArrayList<>();
+        for (int i = 0;i < 5;i ++) {
+            Emp emp = new Emp();
+            emp.setAge(i);
+            emp.setEmpName("名字" + i);
+            empList.add(emp);
+        }
+
+        long startTime = System.currentTimeMillis();
+        mapper.insertBatch(empList);
+        System.out.println("时间2:" + (System.currentTimeMillis() - startTime));
+        startTime = System.currentTimeMillis();
+        empList.forEach(c -> mapper.insert(c));
+        System.out.println("时间1:" + (System.currentTimeMillis() - startTime));
+
+        startTime = System.currentTimeMillis();
+        SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
+        EmpMapper mapper = sqlSession.getMapper(EmpMapper.class);
+        empList.stream().forEach(c -> mapper.insertSelective(c));
+        sqlSession.commit();
+        sqlSession.close();
+        System.out.println("时间3:" + (System.currentTimeMillis() - startTime));
+
+    }
+
 
 
 }

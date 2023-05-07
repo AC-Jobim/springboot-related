@@ -8,13 +8,22 @@
     MyBatis3Simple: 生成基本的CRUD（清新简洁版）
     MyBatis3: 生成带条件的CRUD（奢华尊享版）
     -->
+
+
     <context id="DB2Tables" targetRuntime="MyBatis3">
+
+        <!--suppressAllComments 设置为true 则不再生成注释-->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
         <!-- 数据库的连接信息 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://101.200.241.73:3306/mybatis"
+                        connectionURL="jdbc:mysql://101.200.241.73:3306/mybatis?rewriteBatchedStatements=true"
                         userId="root"
                         password="ZHAOBIN138">
         </jdbcConnection>
+
         <!-- javaBean的生成策略,targetPackage指定生成类所在的包，指定生成类所在的位置-->
         <javaModelGenerator targetPackage="com.zb.mybatis.generator.pojo" targetProject=".\src\main\java">
             <property name="enableSubPackages" value="true" />
@@ -33,6 +42,8 @@
                              targetPackage="com.zb.mybatis.generator.mapper" targetProject=".\src\main\java">
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
+
+
         <!-- 逆向分析的表 -->
         <!-- tableName设置为*号，可以对应所有表，此时不写domainObjectName -->
         <!-- domainObjectName属性指定生成出来的实体类的类名 -->
