@@ -14,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,13 +93,14 @@ public class MBGTest {
         empTemp.setAge(1);
         empTemp.setEmpName("名字" + 1);
         mapper.insert(empTemp);
-
+        HandlerInterceptorAdapter
         List<Emp> empList = new ArrayList<>();
         for (int i = 0;i < 5;i ++) {
             Emp emp = new Emp();
             emp.setAge(i);
             emp.setEmpName("名字" + i);
             empList.add(emp);
+
         }
 
         long startTime = System.currentTimeMillis();
