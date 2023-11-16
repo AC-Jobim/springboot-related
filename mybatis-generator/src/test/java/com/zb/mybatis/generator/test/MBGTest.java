@@ -93,7 +93,7 @@ public class MBGTest {
         empTemp.setAge(1);
         empTemp.setEmpName("名字" + 1);
         mapper.insert(empTemp);
-        HandlerInterceptorAdapter
+
         List<Emp> empList = new ArrayList<>();
         for (int i = 0;i < 5;i ++) {
             Emp emp = new Emp();
